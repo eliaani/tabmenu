@@ -6,58 +6,27 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers';
 import { format } from 'date-fns';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Todos from './Todos';
 
-function Todolist() {
-  const [todo, setTodo] = useState({ date: new Date(), description: '' });
-  const [todos, setTodos] = useState([]);
+function App() {
+const [value, setValue] = useState('home');
 
-  const inputChanged = (event) => {
-    setTodo({ ...todo, [event.target.name]: event.target.value });
-  }
-
-  const dateChanged = (value) => {
-    setTodo({ ...todo, date: value });
-  }
-
-  const addTodo = (event) => {
-    setTodos([...todos, todo]);
-  }
-
-  const deleteTodo = (index) => {
-    const todos2 = todos.filter((todo, i) => i !== index);
-
-    setTodos(todos2);
-  }
+const handleChange = (event, value) => {  setValue(value);};
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <div style={{ width: '500px', margin: 'auto' }}>
-        <Stack direction="row" spacing={2} justifyContent="center" alignItems="center" marginTop="20px">
-          <DesktopDatePicker
-            label="Date desktop"
-            inputFormat="dd/MM/yyyy"
-            value={todo.date}
-            onChange={dateChanged}
-            renderInput={(params) => <TextField {...params} />}
-          />
-
-          <TextField type="text" onChange={inputChanged} variant="standard"
-            label="Description" name="description" value={todo.description} />
-
-          <Button onClick={addTodo} variant="contained">Add</Button>
-        </Stack>
-        <table style={{ borderSpacing:'8px' }}>
-          <tr><td style={{ width:'230px' }}>Date</td><td>Description</td></tr>
-          <tbody>
-            {
-              todos.map((todo, index) => <tr key={index}><td>{format(todo.date, "dd.MM.yyyy HH.mm")}</td><td>{todo.description}</td> 
-              <button onClick={() => deleteTodo(index)}>Delete</button> </tr>)
-            }
-          </tbody>
-        </table>
-      </div>
+      <div style={{display: 'flex', flexDirection:'column', alignItems: 'center'}} >
+        <Tabs value={value} onChange={handleChange}>
+          <Tab value="home" label="Home" />
+          <Tab value="todos" label="Todos" />
+        </Tabs>
+        {value === 'home' && <div>TERE TULEMAST!!!</div>}   
+        {value === 'todos' && <Todos/>}
+        </div>
     </LocalizationProvider>
   );
 };
 
-export default Todolist;
+export default App;
